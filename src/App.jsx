@@ -12,13 +12,24 @@ const FIXED_EXPENSES = [
   { id: 'charges_vie', label: 'Charges de vie', amount: 3000.00, category: 'vie' },
 ]
 
+const SEMI_FIXED_EXPENSES = [
+  { id: 'electricite', label: 'Électricité (ONEE)', amount: 559.00, category: 'util' },
+  { id: 'eau', label: 'Eau (LYDEC)', amount: 121.00, category: 'util' },
+  { id: 'fibre', label: 'Orange Fibre', amount: 499.00, category: 'telecom' },
+  { id: 'gsm1', label: 'Orange GSM 1', amount: 95.00, category: 'telecom' },
+  { id: 'gsm2', label: 'Orange GSM 2', amount: 99.00, category: 'telecom' },
+  { id: 'gsm3', label: 'Orange GSM 3', amount: 164.00, category: 'telecom' },
+]
+
 const CAT_COLOR = {
   logement: '#6366f1', transport: '#f59e0b', education: '#10b981',
   vie: '#3b82f6', autre: '#ec4899', loisir: '#8b5cf6', sante: '#ef4444',
+  util: '#06b6d4', telecom: '#f97316',
 }
 const CAT_ICON = {
   logement: '🏠', transport: '🚗', education: '🎓',
   vie: '🛒', autre: '💸', loisir: '🎮', sante: '💊',
+  util: '⚡', telecom: '📱',
 }
 
 const fmt = (n) =>
@@ -83,8 +94,9 @@ function Dashboard({ onLogout }) {
 
   const totalIncome = incomes.reduce((s, i) => s + (parseFloat(i.amount) || 0), 0)
   const totalFixed = FIXED_EXPENSES.reduce((s, e) => s + e.amount, 0)
+  const totalSemiFixed = SEMI_FIXED_EXPENSES.reduce((s, e) => s + e.amount, 0)
   const totalExtra = extras.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0)
-  const totalExp = totalFixed + totalExtra
+  const totalExp = totalFixed + totalSemiFixed + totalExtra
   const balance = totalIncome - totalExp
   const pct = totalIncome > 0 ? Math.min((totalExp / totalIncome) * 100, 100) : 0
 
@@ -164,7 +176,7 @@ function Dashboard({ onLogout }) {
           </div>
 
           <div className="card">
-            <h3 className="section-title">Répartition des dépenses fixes</h3>
+            <h3 className="section-title">Dépenses fixes</h3>
             {FIXED_EXPENSES.map(e => (
               <div key={e.id} className="row-item">
                 <div className="row-left">
@@ -183,6 +195,29 @@ function Dashboard({ onLogout }) {
             <div className="row-item">
               <strong>Sous-total fixes</strong>
               <strong>{fmt(totalFixed)}</strong>
+            </div>
+          </div>
+
+          <div className="card">
+            <h3 className="section-title">Charges partiellement fixes <span className="avg-badge">moyennes</span></h3>
+            {SEMI_FIXED_EXPENSES.map(e => (
+              <div key={e.id} className="row-item">
+                <div className="row-left">
+                  <span className="dot" style={{ background: CAT_COLOR[e.category] }} />
+                  <span>{CAT_ICON[e.category]} {e.label}</span>
+                </div>
+                <div className="row-right">
+                  <span className="amt">{fmt(e.amount)}</span>
+                  {totalIncome > 0 && (
+                    <span className="pct-chip">{((e.amount / totalIncome) * 100).toFixed(1)}%</span>
+                  )}
+                </div>
+              </div>
+            ))}
+            <div className="divider" />
+            <div className="row-item">
+              <strong>Sous-total charges</strong>
+              <strong>{fmt(totalSemiFixed)}</strong>
             </div>
           </div>
 
@@ -270,6 +305,26 @@ function Dashboard({ onLogout }) {
             <div className="row-item">
               <strong>Sous-total fixes</strong>
               <strong>{fmt(totalFixed)}</strong>
+            </div>
+          </div>
+
+          <div className="card">
+            <h3 className="section-title">Charges partiellement fixes <span className="avg-badge">moyennes</span></h3>
+            {SEMI_FIXED_EXPENSES.map(e => (
+              <div key={e.id} className="row-item">
+                <div className="row-left">
+                  <span className="cat-pill" style={{ background: CAT_COLOR[e.category] + '25', color: CAT_COLOR[e.category] }}>
+                    {CAT_ICON[e.category]} {e.category}
+                  </span>
+                  <span>{e.label}</span>
+                </div>
+                <span className="amt">{fmt(e.amount)}</span>
+              </div>
+            ))}
+            <div className="divider" />
+            <div className="row-item">
+              <strong>Sous-total charges</strong>
+              <strong>{fmt(totalSemiFixed)}</strong>
             </div>
           </div>
 

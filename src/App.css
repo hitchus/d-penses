@@ -23,6 +23,19 @@
 .login-btn { width: 100%; padding: 12px; font-size: 15px; margin-top: 4px; }
 .login-error { color: #f87171; font-size: 13px; text-align: center; margin: 0; }
 .field-error { border-color: #f87171 !important; }
+.avg-badge {
+  font-size: 10px;
+  background: #f59e0b22;
+  color: #f59e0b;
+  border: 1px solid #f59e0b44;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 8px;
+  vertical-align: middle;
+}
 
 /* ── Layout ── */
 .app { display: flex; flex-direction: column; gap: 0; }
