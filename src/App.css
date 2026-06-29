@@ -1,3 +1,29 @@
+/* ── Login ── */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+  padding: 16px;
+}
+.login-box {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 20px;
+  padding: 40px 32px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+.login-logo { font-size: 48px; margin-bottom: 12px; }
+.login-title { font-size: 26px; font-weight: 700; color: #f1f5f9; margin: 0 0 6px; }
+.login-sub { font-size: 13px; color: #64748b; margin: 0 0 28px; }
+.login-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.login-btn { width: 100%; padding: 12px; font-size: 15px; margin-top: 4px; }
+.login-error { color: #f87171; font-size: 13px; text-align: center; margin: 0; }
+.field-error { border-color: #f87171 !important; }
+
 /* ── Layout ── */
 .app { display: flex; flex-direction: column; gap: 0; }
 

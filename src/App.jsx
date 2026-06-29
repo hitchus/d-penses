@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 
+const CREDENTIALS = { username: 'hicham', password: '1Adam2Aicha.' }
+
 const FIXED_EXPENSES = [
   { id: 'logement', label: 'Traite Logement', amount: 6544.22, category: 'logement' },
   { id: 'assurance_logement', label: 'Assurance Logement', amount: 376.77, category: 'logement' },
@@ -11,23 +13,12 @@ const FIXED_EXPENSES = [
 ]
 
 const CAT_COLOR = {
-  logement: '#6366f1',
-  transport: '#f59e0b',
-  education: '#10b981',
-  vie: '#3b82f6',
-  autre: '#ec4899',
-  loisir: '#8b5cf6',
-  sante: '#ef4444',
+  logement: '#6366f1', transport: '#f59e0b', education: '#10b981',
+  vie: '#3b82f6', autre: '#ec4899', loisir: '#8b5cf6', sante: '#ef4444',
 }
-
 const CAT_ICON = {
-  logement: '🏠',
-  transport: '🚗',
-  education: '🎓',
-  vie: '🛒',
-  autre: '💸',
-  loisir: '🎮',
-  sante: '💊',
+  logement: '🏠', transport: '🚗', education: '🎓',
+  vie: '🛒', autre: '💸', loisir: '🎮', sante: '💊',
 }
 
 const fmt = (n) =>
@@ -35,7 +26,53 @@ const fmt = (n) =>
 
 let uid = 1
 
-export default function App() {
+function Login({ onLogin }) {
+  const [user, setUser] = useState('')
+  const [pass, setPass] = useState('')
+  const [error, setError] = useState(false)
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    if (user === CREDENTIALS.username && pass === CREDENTIALS.password) {
+      sessionStorage.setItem('dpenses_auth', '1')
+      onLogin()
+    } else {
+      setError(true)
+      setPass('')
+    }
+  }
+
+  return (
+    <div className="login-wrapper">
+      <div className="login-box">
+        <div className="login-logo">💰</div>
+        <h2 className="login-title">D-Penses</h2>
+        <p className="login-sub">Connectez-vous pour accéder à votre espace</p>
+        <form onSubmit={handleSubmit} className="login-form">
+          <input
+            className={`field ${error ? 'field-error' : ''}`}
+            placeholder="Nom d'utilisateur"
+            value={user}
+            autoComplete="username"
+            onChange={e => { setUser(e.target.value); setError(false) }}
+          />
+          <input
+            className={`field ${error ? 'field-error' : ''}`}
+            type="password"
+            placeholder="Mot de passe"
+            value={pass}
+            autoComplete="current-password"
+            onChange={e => { setPass(e.target.value); setError(false) }}
+          />
+          {error && <p className="login-error">Identifiants incorrects</p>}
+          <button className="btn btn-green login-btn" type="submit">Se connecter</button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function Dashboard({ onLogout }) {
   const [incomes, setIncomes] = useState([{ id: 'salaire', label: 'Salaire', amount: '' }])
   const [extras, setExtras] = useState([])
   const [tab, setTab] = useState('dashboard')
@@ -78,6 +115,7 @@ export default function App() {
         <div className="hdr-btns">
           <button className="btn btn-green" onClick={() => setIncomeModal(true)}>＋ Revenu</button>
           <button className="btn btn-red" onClick={() => setExpenseModal(true)}>＋ Dépense</button>
+          <button className="btn btn-ghost" onClick={onLogout}>⎋ Déconnexion</button>
         </div>
       </header>
 
@@ -240,9 +278,7 @@ export default function App() {
               <h3 className="section-title">Dépenses variables</h3>
               <button className="btn btn-red sm" onClick={() => setExpenseModal(true)}>＋ Ajouter</button>
             </div>
-            {extras.length === 0 && (
-              <p className="empty-msg">Aucune dépense variable ce mois-ci</p>
-            )}
+            {extras.length === 0 && <p className="empty-msg">Aucune dépense variable ce mois-ci</p>}
             {extras.map(e => (
               <div key={e.id} className="row-item">
                 <div className="row-left">
@@ -342,4 +378,16 @@ export default function App() {
       )}
     </div>
   )
+}
+
+export default function App() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem('dpenses_auth') === '1')
+
+  function logout() {
+    sessionStorage.removeItem('dpenses_auth')
+    setAuthed(false)
+  }
+
+  if (!authed) return <Login onLogin={() => setAuthed(true)} />
+  return <Dashboard onLogout={logout} />
 }
