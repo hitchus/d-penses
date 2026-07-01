@@ -10,6 +10,7 @@ const FIXED_EXPENSES = [
   { id: 'assurance_voiture', label: 'Assurance Voiture', amount: 95.27, category: 'transport' },
   { id: 'ecole', label: 'École', amount: 4000.00, category: 'education' },
   { id: 'charges_vie', label: 'Charges de vie', amount: 3000.00, category: 'vie' },
+  { id: 'syndic', label: 'Frais de Syndic', amount: 800.00, category: 'logement' },
 ]
 
 const SEMI_FIXED_EXPENSES = [
